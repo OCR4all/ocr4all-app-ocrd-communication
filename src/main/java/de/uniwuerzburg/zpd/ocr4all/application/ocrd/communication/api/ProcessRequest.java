@@ -8,10 +8,10 @@
 package de.uniwuerzburg.zpd.ocr4all.application.ocrd.communication.api;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * Defines process requests for the api.
@@ -33,40 +33,61 @@ public class ProcessRequest implements Serializable {
 	private final String key;
 
 	/**
-	 * The working directory of the job. It is relative to the project folder.
-	 */
-	@NotBlank
-	private final String folder;
-
-	/**
 	 * The OCR-D processor.
 	 */
 	@NotBlank
 	private final String processor;
 
 	/**
+	 * The working directory of the job. It is relative to the project folder.
+	 */
+	@NotBlank
+	private final String folder;
+
+	/**
+	 * The input folder.
+	 */
+	@NotBlank
+	private final String input;
+
+	/**
+	 * The output folder.
+	 */
+	@NotBlank
+	private final String output;
+
+	/**
 	 * The OCR-D processor arguments.
 	 */
-	@NotNull
-	private final List<String> arguments;
+	private final List<String> arguments = new ArrayList<>();
 
 	/**
 	 * Creates a process request for the api.
 	 * 
 	 * @param key       The job key.
+	 * @param processor The OCR-D processor.
 	 * @param folder    The working directory of the job. It is relative to the
 	 *                  project folder.
-	 * @param processor The OCR-D processor.
+	 * @param input     The input folder.
+	 * @param output    The output folder.
 	 * @param arguments The OCR-D processor arguments.
 	 * @since 17
 	 */
-	public ProcessRequest(String key, String folder, String processor, List<String> arguments) {
+	public ProcessRequest(String key, String processor, String folder, String input, String output,
+			List<String> arguments) {
 		super();
 
-		this.key = key;
-		this.folder = folder;
-		this.processor = processor;
-		this.arguments = arguments;
+		this.key = key.trim();
+		this.processor = processor.trim();
+		
+		this.folder = folder.trim();
+		this.input = input.trim();
+		this.output = output.trim();
+
+		if (arguments != null)
+			for (String argument : arguments)
+				if (argument != null && !argument.isBlank())
+					this.arguments.add(argument.trim());
 	}
 
 	/**
@@ -77,6 +98,16 @@ public class ProcessRequest implements Serializable {
 	 */
 	public String getKey() {
 		return key;
+	}
+
+	/**
+	 * Returns the OCR-D processor.
+	 *
+	 * @return The OCR-D processor.
+	 * @since 17
+	 */
+	public String getProcessor() {
+		return processor;
 	}
 
 	/**
@@ -91,13 +122,23 @@ public class ProcessRequest implements Serializable {
 	}
 
 	/**
-	 * Returns the OCR-D processor.
+	 * Returns the input folder.
 	 *
-	 * @return The OCR-D processor.
+	 * @return The input folder.
 	 * @since 17
 	 */
-	public String getProcessor() {
-		return processor;
+	public String getInput() {
+		return input;
+	}
+
+	/**
+	 * Returns the output folder.
+	 *
+	 * @return The output folder.
+	 * @since 17
+	 */
+	public String getOutput() {
+		return output;
 	}
 
 	/**
